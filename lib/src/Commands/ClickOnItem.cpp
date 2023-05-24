@@ -29,8 +29,12 @@ void ClickOnItem::execute(CommandEnvironment& env)
 
     auto size = item->size();
     auto mousePoint = m_position.positionForItemSize(size);
+#ifdef SPIX_USE_QTEST_EVENTS
+    env.scene().events().mouseClick(item.get(), mousePoint, m_mouseButton);
+#else
     env.scene().events().mouseDown(item.get(), mousePoint, m_mouseButton);
     env.scene().events().mouseUp(item.get(), mousePoint, m_mouseButton);
+#endif
 }
 
 } // namespace cmd

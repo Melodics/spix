@@ -20,6 +20,8 @@
 #include <QDragMoveEvent>
 #include <QMimeData>
 
+#include <QTest>
+
 namespace spix {
 
 namespace {
@@ -91,6 +93,22 @@ void sendQtKeyEvent(Item* item, bool press, int keyCode, KeyModifier mod)
 
 } // namespace
 
+#ifdef SPIX_USE_QTEST_EVENTS
+
+void QtEvents::mouseClick(Item* item, Point loc, MouseButton button)
+{
+    QPointF windowLoc;
+    auto window = getWindowAndPositionForItem(item, loc, windowLoc);
+    if (!window)
+        return;
+
+    Qt::MouseButton eventCausingButton = getQtMouseButtonValue(button);
+
+    QTest::mouseClick(window, eventCausingButton, Qt::NoModifier, windowLoc.toPoint());
+}
+
+#endif SPIX_USE_QTEST_EVENTS
+
 void QtEvents::mouseDown(Item* item, Point loc, MouseButton button)
 {
     QPointF windowLoc;
@@ -102,9 +120,14 @@ void QtEvents::mouseDown(Item* item, Point loc, MouseButton button)
     Qt::MouseButton eventCausingButton = getQtMouseButtonValue(button);
     Qt::MouseButtons activeButtons = getQtMouseButtonValue(m_pressedMouseButtons);
 
+#ifdef SPIX_USE_QTEST_EVENTS
+    QTest::mousePress(window, eventCausingButton, Qt::NoModifier, windowLoc.toPoint());
+#else
+
     QMouseEvent* event
         = new QMouseEvent(QEvent::MouseButtonPress, windowLoc, eventCausingButton, activeButtons, Qt::NoModifier);
     QGuiApplication::postEvent(window, event);
+#endif
 }
 
 void QtEvents::mouseUp(Item* item, Point loc, MouseButton button)
@@ -126,9 +149,13 @@ void QtEvents::mouseUp(Item* item, Point loc, MouseButton button)
     Qt::MouseButtons activeButtons = getQtMouseButtonValue(m_pressedMouseButtons);
 #endif
 
+#ifdef SPIX_USE_QTEST_EVENTS
+    QTest::mouseRelease(window, eventCausingButton, Qt::NoModifier, windowLoc.toPoint());
+#else
     QMouseEvent* event
         = new QMouseEvent(QEvent::MouseButtonRelease, windowLoc, eventCausingButton, activeButtons, Qt::NoModifier);
     QGuiApplication::postEvent(window, event);
+#endif
 }
 
 void QtEvents::mouseMove(Item* item, Point loc)

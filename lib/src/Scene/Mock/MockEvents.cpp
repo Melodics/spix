@@ -8,6 +8,18 @@
 
 namespace spix {
 
+#ifdef SPIX_USE_QTEST_EVENTS
+
+void MockEvents::mouseClick(Item* item, Point loc, MouseButton /*button*/)
+{
+    if (onMouseClickEvent) {
+        onMouseClickEvent(item, loc, true, false);
+        onMouseClickEvent(item, loc, false, true);
+    }
+}
+
+#endif
+
 void MockEvents::mouseDown(Item* item, Point loc, MouseButton /*button*/)
 {
     if (onMouseClickEvent) {

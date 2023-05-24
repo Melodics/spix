@@ -12,6 +12,9 @@ namespace spix {
 
 class QtEvents : public Events {
 public:
+#ifdef SPIX_USE_QTEST_EVENTS
+    void mouseClick(Item* item, Point loc, MouseButton button) override;
+#endif
     void mouseDown(Item* item, Point loc, MouseButton button) override;
     void mouseUp(Item* item, Point loc, MouseButton button) override;
     void mouseMove(Item* item, Point loc) override;

@@ -19,6 +19,9 @@ class Events {
 public:
     virtual ~Events() = default;
 
+#ifdef SPIX_USE_QTEST_EVENTS
+    virtual void mouseClick(Item* item, Point loc, MouseButton button) = 0;
+#endif
     virtual void mouseDown(Item* item, Point loc, MouseButton button) = 0;
     virtual void mouseUp(Item* item, Point loc, MouseButton button) = 0;
     virtual void mouseMove(Item* item, Point loc) = 0;
