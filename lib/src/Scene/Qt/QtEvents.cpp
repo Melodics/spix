@@ -107,7 +107,7 @@ void QtEvents::mouseClick(Item* item, Point loc, MouseButton button)
     QTest::mouseClick(window, eventCausingButton, Qt::NoModifier, windowLoc.toPoint());
 }
 
-#endif SPIX_USE_QTEST_EVENTS
+#endif
 
 void QtEvents::mouseDown(Item* item, Point loc, MouseButton button)
 {
